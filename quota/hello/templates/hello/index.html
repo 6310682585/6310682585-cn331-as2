@@ -1,0 +1,8 @@
+{% extends 'hello/layout.html' %}
+{% block body %}
+
+<h1>Homepage</h1>
+<ul>Login</ul>
+<a href="{% url 'users:login' %}">User</a>
+<a href="{% url 'admin:index' %}">Admin</a>
+{% endblock %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -10,10 +11,23 @@ class ID(models.Model):
         return f"{ self.code }({ self.coursename })"
 
 class Course(models.Model):
+    # subject (link to class ID)
     subject = models.ForeignKey(ID, on_delete=models.CASCADE, related_name="CourseCode")
-    semester = models.IntegerField()
-    year  = models.IntegerField()
-    seat  = models.IntegerField()
+    
+    # semester
+    class SemesterStatus(models.IntegerChoices):
+        semester_one = 1
+        semester_two = 2
+        summer = 3
+    semester = models.PositiveIntegerField(choices=SemesterStatus.choices)
+    
+    # year
+    year  = models.CharField(max_length=4, help_text="Use format: YYYY")
+    
+    # seat
+    seat  = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(9999)])
+    
+    # status: open/ close
     class CStatus(models.IntegerChoices):
         open = 1
         close = 0
