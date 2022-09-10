@@ -1,17 +1,23 @@
-{% extends 'users/layout.html' %}
+{% extends 'users/layoutlogin.html' %}
 {% block body %}
 
-<h1>Login</h1>
+<div id="box">
 
-{% if message %}
-    <div style="color: red">{{ message }}</div>
-{% endif %}
+    <h1>Login Student</h1>
 
-<form action="{% url 'users:login' %}" method="post">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="Password">
-    <input type="submit" value="Login">
-</form>
-<a href="{% url 'hello:index' %}">Go to Homepage</a>
+    {% if message %}
+        <div style="color: red">{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'users:login' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <br>
+        <input type="submit" value="Login">
+    </form>
+    <a href="{% url 'hello:index' %}"><p>Go to Homepage</p></a>
+
+</div>
+
 {% endblock %}
