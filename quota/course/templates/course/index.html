@@ -1,4 +1,26 @@
 {% extends 'course/layout.html' %}
 {% block body %}
     <h1>Course List</h1>
+    <ul>
+        {% for courses in course %}
+        <li>{{ courses }} <a href="{% url 'course:remove' courses.id %}">Remove</a></li>
+        {% empty %}
+        <li>No course</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Request Course</h2>
+<form action="{% url 'course:add' %}" method="post">
+    {% csrf_token %}
+    {% if noncourse|length == 0 %}
+    <i>No course :(</i>
+    {% else %}
+    <select name="course">
+        {% for course in noncourse %}
+        <option value="{{ course.id }}">{{ course.subject }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Request Course">
+    {% endif %}
+</form>
 {% endblock %}
