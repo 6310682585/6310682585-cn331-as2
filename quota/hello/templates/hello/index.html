@@ -1,8 +1,22 @@
 {% extends 'hello/layout.html' %}
 {% block body %}
 
-<h1>Homepage</h1>
-<ul>Login</ul>
-<a href="{% url 'users:login' %}">User</a>
-<a href="{% url 'admin:index' %}">Admin</a>
+<div id="box">
+    <h1>Quota System Login Page</h1>
+    <table class="container">
+        <tr>
+            <td>
+                <a href="{% url 'users:login' %}">
+                    <button class="button">User</button>
+                </a>
+            </td>
+            <td>
+                <a href="{% url 'admin:index' %}">
+                    <button class="button">Admin</button>
+                </a>
+            </td>
+        </tr>
+    </table>  
+</div>
+
 {% endblock %}
