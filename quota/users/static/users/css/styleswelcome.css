@@ -1,0 +1,66 @@
+h1 {
+    font-size: 45px;
+    text-align: center;
+}
+
+ul {
+    font-size: 25px;
+    text-align: center;
+    line-height: 50px;
+}
+
+body {
+    background-image: url("https://engr.tu.ac.th/uploads/images_virtual_bg/2021.7.12_210712_2_.jpg");
+    background-color: rgb(39, 39, 39);
+    background-size: cover;
+}
+
+#box1 {
+    box-sizing: content-box;
+    padding: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;  
+    margin-top: 100px;
+    margin-left: 200px;
+    margin-right: 200px;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 15px;
+}
+
+#box2 {
+    box-sizing: content-box;
+    padding: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;  
+    margin: 50px;
+    margin-left: 200px;
+    margin-right: 200px;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.button {
+    padding: 15px 20px;
+    margin: 20px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background-color: #1c1c1c;
+    border: none;
+    border-radius: 15px;
+}
+  
+.button:hover {
+    background-color: #ff9553;
+    color: black;
+}
+
+.container{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}

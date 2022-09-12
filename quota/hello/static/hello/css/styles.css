@@ -39,12 +39,6 @@ body {
     background-color: #f1eb96;
     color: black;
 }
-  
-.button:active {
-    background-color: #ff9553;
-    box-shadow: 0 5px #444444;
-    transform: translateY(4px);
-}
 
 .container{
     width: 500px;

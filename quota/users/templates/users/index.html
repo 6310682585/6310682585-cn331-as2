@@ -1,12 +1,26 @@
 {% extends 'users/layoutwelcome.html' %}
 {% block body %}
 
-<h1>Welcome, {{ request.user.first_name }}</h1>
-<ul>
-    <li>Username: {{ request.user.username }}</li>
-    <li>Email: {{ request.user.email }}</li>
-</ul>
+<div id="box1">
+    <h1>Welcome, {{ request.user.first_name }}</h1>
+</div>
 
-<a href="{% url 'users:logout' %}">Logout</a>
-<a href="{% url 'course:index' %}">Course</a>
+<div id="box2">
+    <table class="container">
+        <tr>
+            <td>
+                <ul>
+                Username: {{ request.user.username }}
+                <br>
+                Email: {{ request.user.email }}
+                </ul>
+            </td>
+            <td>
+                <a href="{% url 'course:index' %}"><button class="button">Course</button></a>
+                <br>
+                <a href="{% url 'users:logout' %}"><button class="button">Logout</button></a>
+            </td>
+        </tr>
+    </table>
+</div>
 {% endblock %}

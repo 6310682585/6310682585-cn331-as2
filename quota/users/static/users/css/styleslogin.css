@@ -15,7 +15,6 @@ body {
 
 #box {
     box-sizing: content-box;
-    /* height: 300px; */
     padding: 50px;
     padding-top: 20px;
     padding-bottom: 30px;  
