@@ -3,16 +3,17 @@ from .models import ID, Course, Request
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
     course_exclude = Request.objects
     course = course_exclude.filter(username=request.user.id)
-    check_course = Course.objects.exclude(pk__in=[i.course.id for i in course]).exclude(coursestatus=0)
+    check_course = Course.objects.exclude(subject__in=[i.course.id for i in course]).exclude(coursestatus=0)
     data = []
     
     for i in check_course:
-        seat = Request.objects.filter(course=i.id)
+        seat = Request.objects.filter(course=i.subject.id)
         if len(seat) < i.seat:
             data.append(i)
 
@@ -23,11 +24,11 @@ def index(request):
 
 def add(request):
     if request.method == "POST":
-        courses = Request.objects.filter(username=request.user.id)
-        seat = Request.objects.filter(course=request.POST["course"])
-        course = Course.objects.get(pk=request.POST["course"])
+        courseId = request.POST["course"]
+        course = Course.objects.get(pk=courseId)
+        seat = Request.objects.filter(course=course.subject.id)
 
-        is_registered = Request.objects.filter(username=request.user.id).filter(course=request.POST["course"])
+        is_registered = Request.objects.filter(username=request.user.id).filter(course=course.subject.id)
         if len(is_registered) > 0:
             return HttpResponse('You had been requested.')
 
@@ -36,8 +37,8 @@ def add(request):
         
         if course.coursestatus == 0:
             return HttpResponse('Course is closed.')
-
-        Request.objects.create(username_id=request.user.id, course_id=course.id)
+            
+        Request.objects.create(username_id=request.user.id, course_id=course.subject.id)
     return HttpResponseRedirect(reverse('course:index'))
 
 def remove(request, request_id):

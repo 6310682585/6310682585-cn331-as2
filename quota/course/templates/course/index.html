@@ -24,7 +24,7 @@
     <h1>Course List</h1>
     <ul>
         {% for courses in course %}
-        <li>{{ courses }} <a href="{% url 'course:remove' courses.id %}"><button class="buttonremove">Remove</button></a></li>
+        <li>{{ courses.course }}  <a href="{% url 'course:remove' courses.id %}"><button class="buttonremove">Remove</button></a></li>
         {% empty %}
         <li>No course</li>
         {% endfor %}
