@@ -26,13 +26,12 @@ def add(request):
     if request.method == "POST":
         courseId = request.POST["course"]
         course = Course.objects.get(pk=courseId)
-        seat = Request.objects.filter(course=course.subject.id)
 
         is_registered = Request.objects.filter(username=request.user.id).filter(course=course.subject.id)
         if len(is_registered) > 0:
             return HttpResponse('You had been requested.')
 
-        if len(seat) >= course.seat:
+        if available_seat(course) <= 0 >= course.seat:
             return HttpResponse('Seat is full.')
         
         if course.coursestatus == 0:
@@ -40,6 +39,10 @@ def add(request):
             
         Request.objects.create(username_id=request.user.id, course_id=course.subject.id)
     return HttpResponseRedirect(reverse('course:index'))
+
+def available_seat(course):
+    seat = Request.objects.filter(course=course.subject.id)
+    return course.seat - len(seat)
 
 def remove(request, request_id):
     course_id = Request.objects.get(pk=request_id).course.id
