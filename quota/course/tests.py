@@ -6,7 +6,7 @@ class CourseTestCase(TestCase):
 
     def setUp(self):
         # create course id
-        idcourse = ID.objects.create(code="CN201", coursename="OOP")
+        idcourse = ID.objects.create(code="CN331", coursename="soft engr.")
 
         Course.objects.create(subject=idcourse, semester=1, year=2022, seat=2, coursestatus=1)
 
@@ -23,23 +23,10 @@ class CourseTestCase(TestCase):
         
         course = Course.objects.first()
 
-        # user1
-        User.objects.create_user('harry', 'harry@potter.com', 'harrypassword')
-        self.client.login(username = 'harry', password = 'harrypassword')
-        
-        self.client.post('/course/add/', {
-            'course': course,
-        })
-        self.client.logout()
+        student1 = User.objects.create_user('harry', 'harry@potter.com', 'harrypassword')
+        student2 = User.objects.create_user('hermione', 'hermione@granger.com', 'hermionepassword')
+        Request.objects.create(username=student1, course=course.subject)
+        Request.objects.create(username=student2, course=course.subject)
 
-        # user2
-        User.objects.create_user('hermione', 'hermione@granger.com', 'hermionepassword')
-        self.client.login(username = 'hermione', password = 'hermionepassword')
-        self.client.post('/course/add/', {
-            'course': course,
-        })
-        self.client.logout()
-
-        # check seat
         seat = views.available_seat(course)
-        self.assertFalse(seat == 0)
+        self.assertEqual(seat, 0)
