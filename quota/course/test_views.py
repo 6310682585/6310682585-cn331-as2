@@ -5,7 +5,6 @@ from .models import ID, Course, Request, User
 
 from course import views
 
-
 class CourseViewTestCase(TestCase):
 
     def setUp(self):
@@ -17,6 +16,8 @@ class CourseViewTestCase(TestCase):
         Request.objects.create(username=student, course=course.subject)
 
 
+# test login logout
+
     def test_homepage_view_status_code(self):
         """ main page view's status code is ok """
 
@@ -25,15 +26,37 @@ class CourseViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-    # def test_user_login(self):
-    #     """ login view's status code is ok """
-    #     c = Client()
-    #     response = c.post(reverse('users:login'),
-    #            {'username': 'hermione', 'password': 'hermionepassword'})
-    #     self.assertEqual(response.status_code, 200)
+    def test_user_login(self):
+        """ correct username and password can login """
+        c = Client()
+        response = c.post(reverse('users:login'),
+               {'username': 'hermione', 'password': 'hermionepassword'})
+        self.assertEqual(response.status_code, 302)
+
+        response = c.get(reverse('users:index'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_cannot_login(self):
+        """ wrong username and password cannot login """
+        c = Client()
+        response = c.post(reverse('users:login'),
+               {'username': 'ron', 'password': 'ronpassword'})
+        self.assertTrue(response.context['message'] == 'Invalid credentials.')
+
+        response = c.get(reverse('users:login'))
+        self.assertEqual(response.status_code, 200)
+
+        response = c.get(reverse('users:index'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_user_logout(self):
+        """ can logout """
+        c = Client()
+        response = c.post(reverse('users:logout'))
+        self.assertTrue(response.context['message'] == 'you are logged out.')
 
 
-
+# test course quota
 
     def test_course_index_view_status_code(self):
         """ course index view's status code is ok """

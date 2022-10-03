@@ -39,8 +39,6 @@ class Course(models.Model):
         return f"{ self.subject }: semester{ self.semester } year{ self.year }: seat quota[{ self.seat }]: { self.coursestatus })"
 
 class Request(models.Model):
-    # username = models.ForeignKey(User, on_delete=models.PROTECT, db_constraint=False, related_name="User")
-    # course = models.ForeignKey(ID, on_delete=models.PROTECT, db_constraint=False, related_name="Coursename")
     username = models.ForeignKey(User, on_delete=models.PROTECT, db_constraint=False, related_name="User")
     course = models.ForeignKey(ID, on_delete=models.SET_NULL, related_name="Coursename", blank=True, null=True)
 
