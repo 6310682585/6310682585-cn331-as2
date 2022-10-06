@@ -1,3 +1,5 @@
+from doctest import REPORT_CDIFF
+from urllib import request, response
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.db.models import Max
@@ -11,11 +13,10 @@ class CourseViewTestCase(TestCase):
         # create course and quota
         idcourse = ID.objects.create(code="CN331", coursename="soft engr.")
         course = Course.objects.create(subject=idcourse, semester=1, year=2022, seat=2, coursestatus=1)
-        student = User.objects.create_user('hermione', 'hermione@granger.com', 'hermionepassword')
+        student = User.objects.create_user(username='hermione', email='hermione@granger.com', password='hermionepassword')
         
         Request.objects.create(username=student, course=course.subject)
-
-
+        
 # test login logout
 
     def test_homepage_view_status_code(self):
@@ -78,11 +79,36 @@ class CourseViewTestCase(TestCase):
             (len(response.context['course']) == 0) and
             seat == 1)
 
-    # def test_add_seat_course(self):
-    #     """ can add available course"""
+    def test_add_seat_course(self):
+        """ can add available course"""
 
-    # def test_cannot_add_nonavailable_seat_course(self):
-    #     """ cannot add course"""
+        course = Course.objects.first()
+        student = User.objects.create_user(username='draco', email='draco@malfoy.com', password='dracopassword')
 
-    # def test_remove_course(self):
-    #     """ can remove course"""
+        self.client.login(username='draco', password='dracopassword')
+        response = self.client.post(reverse('course:add'), {'course': course.subject.id})
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_cannot_add_nonavailable_seat_course(self):
+        """ cannot add course"""
+
+        course = Course.objects.first()
+        student = User.objects.create_user(username='draco', email='draco@malfoy.com', password='dracopassword')
+        student2 = User.objects.create_user( username='harry', email='harry@potter.com', password='harrypassword')
+        Request.objects.create(username=student2, course=course.subject)
+
+        self.client.login(username='draco', password='dracopassword')
+        response = self.client.post(reverse('course:add'), {'course': course.subject.id})
+        self.assertEqual(response.status_code, 400)
+
+    def test_remove_course(self):
+        """ can remove course"""
+
+        course = Course.objects.first()
+        student = User.objects.create_user(username='draco', email='draco@malfoy.com', password='dracopassword')
+        Request.objects.create(username=student, course=course.subject)
+        
+        self.client.login(username='draco', password='dracopassword')
+        response = self.client.post(reverse('course:remove', args=[course.subject.id]))
+        self.assertEqual(response.status_code, 200)

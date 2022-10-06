@@ -1,3 +1,4 @@
+from os import stat
 from django.shortcuts import render
 from .models import ID, Course, Request
 from django.urls import reverse
@@ -26,19 +27,18 @@ def add(request):
     if request.method == "POST":
         courseId = request.POST["course"]
         course = Course.objects.get(pk=courseId)
-
         is_registered = Request.objects.filter(username=request.user.id).filter(course=course.subject.id)
         if len(is_registered) > 0:
-            return HttpResponse('You had been requested.')
+            return HttpResponse('You had been requested.', status = 400)
 
-        if available_seat(course) <= 0 >= course.seat:
-            return HttpResponse('Seat is full.')
+        if available_seat(course) <= 0:
+            return HttpResponse('Seat is full.', status = 400)
         
         if course.coursestatus == 0:
-            return HttpResponse('Course is closed.')
+            return HttpResponse('Course is closed.', status = 400)
             
         Request.objects.create(username_id=request.user.id, course_id=course.subject.id)
-    return HttpResponseRedirect(reverse('course:index'))
+    return HttpResponseRedirect(reverse('course:index'), status = 200)
 
 def available_seat(course):
     seat = Request.objects.filter(course=course.subject.id)
@@ -55,8 +55,8 @@ def remove(request, request_id):
             check+= 1
     
     if check == 0:
-        return HttpResponse('You had not requested.')
+        return HttpResponse('You had not requested.', status = 400)
     
     Request.objects.filter(username=request.user.id).filter(course=course.id).delete()
     
-    return HttpResponseRedirect(reverse('course:index'))
+    return HttpResponseRedirect(reverse('course:index'), status = 200)
