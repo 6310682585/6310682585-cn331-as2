@@ -34,8 +34,8 @@ def add(request):
         if available_seat(course) <= 0:
             return HttpResponse('Seat is full.', status = 400)
         
-        if course.coursestatus == 0:
-            return HttpResponse('Course is closed.', status = 400)
+        # if course.coursestatus == 0:
+        #     return HttpResponse('Course is closed.', status = 400)
             
         Request.objects.create(username_id=request.user.id, course_id=course.subject.id)
     return HttpResponseRedirect(reverse('course:index'), status = 200)
@@ -54,8 +54,8 @@ def remove(request, request_id):
         if course_id == i.course.id:
             check+= 1
     
-    if check == 0:
-        return HttpResponse('You had not requested.', status = 400)
+    # if check == 0:
+    #     return HttpResponse('You had not requested.', status = 400)
     
     Request.objects.filter(username=request.user.id).filter(course=course.id).delete()
     

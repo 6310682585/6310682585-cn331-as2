@@ -79,6 +79,9 @@ class CourseViewTestCase(TestCase):
             (len(response.context['course']) == 0) and
             seat == 1)
 
+
+# test add quota
+
     def test_add_seat_course(self):
         """ can add available course"""
 
@@ -89,18 +92,30 @@ class CourseViewTestCase(TestCase):
         response = self.client.post(reverse('course:add'), {'course': course.subject.id})
         self.assertEqual(response.status_code, 200)
 
-
-    def test_cannot_add_nonavailable_seat_course(self):
-        """ cannot add course"""
+    def test_cannot_add_course_close(self):
+        """ cannot add course (You had been requested.)"""
 
         course = Course.objects.first()
-        student = User.objects.create_user(username='draco', email='draco@malfoy.com', password='dracopassword')
-        student2 = User.objects.create_user( username='harry', email='harry@potter.com', password='harrypassword')
-        Request.objects.create(username=student2, course=course.subject)
+
+        self.client.login(username='hermione', password='hermionepassword')
+        response = self.client.post(reverse('course:add'), {'course': course.subject.id})
+        self.assertEqual(response.content, b'You had been requested.')
+        self.assertEqual(response.status_code, 400)
+
+    def test_cannot_add_seat_full(self):
+        """ cannot add course (Seat is full.)"""
+
+        course = Course.objects.first()
+        student = User.objects.create_user( username='harry', email='harry@potter.com', password='harrypassword')
+        Request.objects.create(username=student, course=course.subject)
 
         self.client.login(username='draco', password='dracopassword')
         response = self.client.post(reverse('course:add'), {'course': course.subject.id})
+        self.assertEqual(response.content, b'Seat is full.')
         self.assertEqual(response.status_code, 400)
+
+    
+# test remove quota
 
     def test_remove_course(self):
         """ can remove course"""
